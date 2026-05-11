@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SatyAnk v63 - Sealed Sovereign OS</title>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <style>
+ :root {
+  --gold: #d4af37;
+  --bg: #020202;
+  --glass: rgba(0,0,0,0.85);
+  --green:#39ff14;
+  --red:#ff3131;
+}
+.history-card{
+  background: rgba(0,0,0,0.85);
+  border-left: 4px solid #39ff14;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: 1px solid #222;
+}
+       body { margin: 0; padding: 0; background: var(--bg); background-size: cover; background-position: center; background-attachment: fixed; color: #eee; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+
+        /* --- संप्रभु हेडर (Sealed) --- */
+        header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 2000; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+        header h1 { color: var(--gold); margin: 0; font-size: 1.4rem; letter-spacing: 5px; text-transform: uppercase; }
+        .hb-sign { font-size: 0.55rem; color: var(--green); letter-spacing: 2px; margin-top: 5px; font-family: monospace; font-weight: bold; }
+
+        .page-nav { display: grid; grid-template-columns: 1fr 1fr 1fr; background: #111; border-bottom: 1px solid #222; }
+        .nav-btn { padding: 12px 5px; border: none; background: none; color: #555; font-weight: bold; cursor: pointer; font-size: 0.65rem; text-transform: uppercase; border-bottom: 3px solid transparent; }
+        .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+
+        /* --- ड्रैगेबल विजेट्स --- */
+        .widget { position: absolute; padding: 10px; background: var(--glass); border: 1px solid var(--gold); border-radius: 12px; min-width: 90px; text-align: center; backdrop-filter: blur(10px); touch-action: none; z-index: 1500; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .widget.unlocked { border: 1.5px dashed #fff; box-shadow: 0 0 20px var(--gold); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        .widget b { display: block; font-size: 0.5rem; color: var(--gold); text-transform: uppercase; margin-bottom: 2px; }
+        .widget span { font-size: 0.95rem; font-weight: 900; display: block; }
+
+        .container { width: 94%; max-width: 500px; margin: 20px auto 180px auto; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- कार्ड्स और इनपुट --- */
+        .glass-card { background: var(--glass); border: 1.5px solid rgba(212, 175, 55, 0.3); border-radius: 25px; padding: 15px; display: flex; flex-direction: column; align-items: center; backdrop-filter: blur(10px); margin-bottom: 15px; position: relative; }
+        .btn-ok { background: var(--gold); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: 900; width: 100%; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .input-row { display: grid; grid-template-columns: 1.2fr 2fr 1fr; gap: 5px; width: 100%; }
+        .qty-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 10px; border: 1px solid #333; }
+        input { background: #000; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; font-size: 0.85rem; width: 100%; text-align: center; outline: none; box-sizing: border-box; }
+        .qty-split input { border: none; background: transparent; }
+
+        .item-card { background: rgba(0,0,0,0.85); border-left: 5px solid var(--gold); padding: 12px; margin-bottom: 8px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        
+        /* --- AUTO-CHECK STATUS --- */
+        .auto-check { font-size: 0.5rem; color: #444; font-family: monospace; text-align: center; margin-top: 5px; width: 100%; }
+
+        /* --- कंट्रोल पैनल --- */
+        .admin-panel { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.95); padding: 15px 10px; border-top: 1.5px solid var(--gold); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 3000; backdrop-filter: blur(20px); }
+        .panel-row { display: flex; justify-content: center; gap: 10px; width: 100%; max-width: 400px; }
+        .admin-panel button { padding: 12px 15px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; font-weight: bold; border: 1px solid var(--gold); }
+        
+        /* संप्रभु मुहर (Sovereign Seal Visual) */
+        .sovereign-seal { position: fixed; bottom: 2px; width: 100%; text-align: center; font-size: 9px; color: #333; background: black; padding: 2px; letter-spacing: 1px; font-family: monospace; z-index: 4000; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 id="appTitle">SatyAnk Shop OS</h1>
+    <div class="hb-sign">HB-SIGN: LIVE-RBM-CORE | A-JUDGE: TRUE</div>
+</header>
+
+<div class="page-nav">
+    <button class="nav-btn active" id="nav1" onclick="showPage(1)">📄 बिलिंग</button>
+    <button class="nav-btn" id="nav2" onclick="showPage(2)">👤 पहचान/Pay</button>
+    <button class="nav-btn" id="nav3" onclick="showPage(3)">📜 इतिहास</button>
+</div>
+
+<!-- संप्रभु विजेट्स -->
+<div id="w_pay" class="widget" style="top:125px; left:10px;"><b>💰 CURR. PAY</b><span id="statPay">₹ 0</span></div>
+<div id="w_items" class="widget" style="top:125px; left:115px;"><b>📦 CURR. QTY</b><span id="statW">0.000 kg</span><span id="statP" style="font-size:0.7rem; color:var(--gold);">0 pc</span></div>
+<div id="w_ledger" class="widget" style="top:125px; left:235px; border-color:var(--green);"><b>📜 MONTH LEDGER</b><span id="ledW">0.000 kg</span><span id="ledP" style="color:var(--green);">0 pc</span></div>
+
+<div class="container">
+    <div id="page1" class="page active">
+        <div class="glass-card">
+            <button class="btn-ok" onclick="manualAdd()">D3: SAVE / OK (सत्य)</button>
+            <div class="input-row">
+                <input type="text" id="mName" placeholder="नाम">
+                <div class="qty-split"><input type="number" id="mWeight" placeholder="वजन"><input type="number" id="mPiece" placeholder="पीस"></div>
+                <input type="number" id="mRate" placeholder="रेट">
+            </div>
+            <input type="text" id="sInp" class="btn-ok" style="background:rgba(255,255,255,0.05); color:var(--gold); margin-top:12px; text-align:center; height:40px; padding:0;" placeholder="🔍 यहाँ से खोजें..." oninput="render()">
+            <div class="auto-check">AUTO-CHECK: RBM–SELF-VERIFY–∞</div>
+        </div>
+        <div id="listArea"></div>
+    </div>
+
+    <div id="page2" class="page">
+        <div class="glass-card">
+            <h3 style="color:var(--gold); margin:0;">👤 ग्राहक पहचान & भुगतान</h3>
+            <input type="text" id="custN" placeholder="पूरा नाम (अनिवार्य)" style="margin:10px 0; width:100%;">
+            <input type="text" id="custI" placeholder="ID (आधार/पासपोर्ट)" style="margin-bottom:10px; width:100%;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+                <button class="nav-btn active" id="p_cash" style="background:#111; border:1px solid #333;" onclick="setPay('Cash')">💵 CASH</button>
+                <button class="nav-btn" id="p_debt" style="background:#111; border:1px solid #333; color:var(--red);" onclick="setPay('Debt')">🚩 उधारी</button>
+            </div>
+            <button class="btn-ok" style="margin-top:20px; background:var(--green);" onclick="finalize()">D3: फाइनल लॉक (SEALED)</button>
+            <div class="auto-check">CORE-SEED: Δ219X | A-JUDGE: TRUE</div>
+        </div>
+    </div>
+
+    <div id="page3" class="page"><div class="glass-card"><h3 style="color:var(--gold); margin:0;">📜 बहीखाता इतिहास</h3></div><div id="historyList"></div></div>
+</div>
+
+<div class="admin-panel" id="builderPanel">
+    <input type="text" id="titleEdit" style="width:90%; background:#000; color:gold; border:1px solid #444; padding:5px; border-radius:5px; margin-bottom:5px;" placeholder="नाम बदलें..." oninput="changeAppTitle(this.value)">
+    <div class="panel-row">
+        <button style="background:#111; color:#fff;" onclick="document.getElementById('bgIn').click()">📸 BG</button>
+        <button id="lockBtn" style="background:var(--red); color:#fff;" onclick="toggleLock()">🔓 UNLOCK</button>
+        <button style="background:var(--gold); color:#000;" onclick="startVoice()">🎤 SPEAK</button>
+    </div>
+    <button style="background:#222; color:#eee; border:1px solid #666; width:100px; padding:8px;" onclick="togglePanel()">DONE</button>
+</div>
+
+<input type="file" id="bgIn" accept="image/*" style="display:none" onchange="upBG(event)">
+
+<footer class="sovereign-seal">
+    IK-RBM-Δ219X | OK-RBM-7F19-A2 | RBM–C0D6–2AF1
+</footer>
+
+<script>
+    let bill = []; let history = JSON.parse(localStorage.getItem("SatyAnk_L_v63")) || []; let isLocked = true; let payMode = "Cash";
+
+    function changeAppTitle(newTitle) { if(!newTitle) newTitle = "SatyAnk Shop OS"; document.getElementById("appTitle").innerText = newTitle; localStorage.setItem("SatyAnk_CustomTitle", newTitle); }
+
+    function manualAdd() {
+        const n = document.getElementById('mName').value.trim();
+        const w = parseFloat(document.getElementById('mWeight').value) || 0;
+        const pc = parseFloat(document.getElementById('mPiece').value) || 0;
+        const r = parseFloat(document.getElementById('mRate').value) || 0;
+        if (n && (w > 0 || pc > 0)) {
+            let exIdx = bill.findIndex(it => it.n.toLowerCase() === n.toLowerCase());
+            if(exIdx !== -1) {
+                bill[exIdx].w += w; bill[exIdx].pc += pc;
+                bill[exIdx].t = (bill[exIdx].w * r) + (bill[exIdx].pc * r);
+                let item = bill.splice(exIdx, 1)[0]; bill.unshift(item);
+            } else {
+                bill.unshift({ n, w, pc, r, t: (w*r + pc*r) });
+            }
+            document.getElementById('mName').value=""; document.getElementById('mWeight').value=""; document.getElementById('mPiece').value=""; document.getElementById('mRate').value=""; render();
+        }
+    }
+
+    function render() {
+        const list = document.getElementById("listArea"); const sVal = document.getElementById("sInp").value.toLowerCase(); list.innerHTML = ""; let tC = 0, tW = 0, tP = 0;
+        bill.forEach((it, index) => {
+            if (sVal && !it.n.toLowerCase().includes(sVal)) return;
+            tC += it.t; tW += it.w; tP += it.pc;
+            list.innerHTML += `<div class="item-card"><div><b>${it.n}</b><br><small>${it.w > 0 ? it.w.toFixed(3)+'kg ' : ''}${it.pc > 0 ? it.pc+'pc' : ''} @₹${it.r}</small></div><div style="display:flex; align-items:center; gap:10px;"><b>₹${it.t.toFixed(0)}</b><span onclick="deleteItem(${index})" style="color:#444;cursor:pointer;">✕</span></div></div>`;
+        });
+        document.getElementById("statPay").innerText = "₹ " + tC.toFixed(0);
+        document.getElementById("statW").innerText = tW.toFixed(3) + " kg";
+        document.getElementById("statP").innerText = tP + " pc";
+        updateLedgerStats();
+    }
+
+    function finalize() {
+        const name = document.getElementById('custN').value.trim();
+        if(!name || bill.length === 0) return alert("विवरण भरें");
+        history.unshift({ id: Date.now(), c: name, i: [...bill], t: bill.reduce((s,i)=>s+i.t,0), m: payMode, d: new Date().toLocaleString(), month: new Date().getMonth() });
+        localStorage.setItem("SatyAnk_L_v63", JSON.stringify(history));
+        alert("A-JUDGE: TRUE | सत्य की मुहर लगी!"); 
+        bill = []; render(); renderHistory(); showPage(1);
+    }
+
+    function updateLedgerStats() {
+        let tw = 0, tp = 0; const currentMonth = new Date().getMonth();
+        history.forEach(h => { if(h.month === currentMonth) { h.i.forEach(item => { tw += (item.w || 0); tp += (item.pc || 0); }); } });
+        document.getElementById("ledW").innerText = tw.toFixed(3) + " kg";
+        document.getElementById("ledP").innerText = tp + " pc";
+    }
+
+    function renderHistory() {
+        const list = document.getElementById("historyList"); list.innerHTML = "";
+        history.forEach(h => { list.innerHTML += `<div class="history-card"><b>${h.c}</b> <b style="float:right; color:var(--gold);">₹${h.t.toFixed(0)}</b><br><small>${h.d} | ID: ${h.i[0].n}...</small></div>`; });
+        updateLedgerStats();
+    }
+
+    function deleteItem(i) { bill.splice(i, 1); render(); }
+    function showPage(n) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('page'+n).classList.add('active'); document.getElementById('nav'+n).classList.add('active'); }
+    function setPay(m) { payMode = m; document.getElementById('p_cash').classList.remove('active'); document.getElementById('p_debt').classList.remove('active'); document.getElementById('p_'+m.toLowerCase()).classList.add('active'); }
+    function upBG(e) { const r = new FileReader(); r.onload = (ev) => { document.body.style.backgroundImage = `url(${ev.target.result})`; localStorage.setItem('S_BG', ev.target.result); }; r.readAsDataURL(e.target.files[0]); }
+    function togglePanel() { let p = document.getElementById('builderPanel'); p.style.display = (p.style.display === "none") ? "flex" : "none"; }
+    function toggleLock() { isLocked = !isLocked; const btn = document.getElementById('lockBtn'); if(isLocked) { btn.innerText = "🔓 UNLOCK"; btn.style.background = "var(--red)"; document.querySelectorAll('.widget').forEach(w => w.classList.remove('unlocked')); } else { btn.innerText = "🔒 LOCK"; btn.style.background = "var(--green)"; document.querySelectorAll('.widget').forEach(w => w.classList.add('unlocked')); }}
+    function startVoice() { const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); rec.lang = 'hi-IN'; rec.onresult = (e) => { let s = e.results[0][0].transcript.toLowerCase(); let n = s.match(/\d+/g); if(n) { document.getElementById('mName').value=s.split(' ')[0]; document.getElementById('mWeight').value=n[0]; if(n[1]) document.getElementById('mRate').value=n[1]; } }; rec.start(); }
+
+    interact('.widget').draggable({ listeners: { move(event) { if (isLocked) return; let t = event.target; let x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx; let y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy; t.style.transform = `translate(${x}px, ${y}px)`; t.setAttribute('data-x', x); t.setAttribute('data-y', y); localStorage.setItem(t.id, JSON.stringify({x, y})); }}});
+
+    window.onload = () => {
+        let st = localStorage.getItem("SatyAnk_CustomTitle"); if(st) document.getElementById("appTitle").innerText = st;
+        document.querySelectorAll('.widget').forEach(w => { let pos = JSON.parse(localStorage.getItem(w.id)); if(pos) { w.style.transform = `translate(${pos.x}px, ${pos.y}px)`; w.setAttribute('data-x', pos.x); w.setAttribute('data-y', pos.y); }}); 
+        let bg = localStorage.getItem('S_BG'); if(bg) document.body.style.backgroundImage = `url(${bg})`; 
+        render(); renderHistory(); 
+    };
+</script>
+</body>
+</html>
