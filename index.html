@@ -82,9 +82,8 @@
     margin-bottom: 15px;
     position: relative;
 
-    animation:
-    floatBox 3s ease-in-out infinite,
-    glowBox 2s infinite alternate;
+   animation:
+glowBox 2s infinite alternate;
 
     will-change: transform;
     transition: transform 0.2s linear;
@@ -328,6 +327,29 @@ w.classList.add('unlocked');
         let bg = localStorage.getItem('S_BG'); if(bg) document.body.style.backgroundImage = `url(${bg})`; 
         render(); renderHistory(); 
     };
+interact('.glass-card').draggable({
+listeners: {
+move(event) {
+
+let target = event.target;
+
+let x =
+(parseFloat(target.getAttribute('data-x')) || 0)
++ event.dx;
+
+let y =
+(parseFloat(target.getAttribute('data-y')) || 0)
++ event.dy;
+
+target.style.transform =
+`translate(${x}px, ${y}px)`;
+
+target.setAttribute('data-x', x);
+target.setAttribute('data-y', y);
+
+}
+}
+});
 </script>
 </body>
 </html>
