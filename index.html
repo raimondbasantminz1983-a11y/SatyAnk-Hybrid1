@@ -33,11 +33,35 @@
         .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
         /* --- ड्रैगेबल विजेट्स --- */
-        .widget { position: absolute; padding: 10px; background: var(--glass); border: 1px solid var(--gold); border-radius: 12px; min-width: 90px; text-align: center; backdrop-filter: blur(10px); touch-action: none; z-index: 1500; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+     
+.widget{
+    position: relative;
+    padding: 10px;
+    background: var(--glass);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    min-width: 110px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    touch-action: none;
+    z-index: 1500;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
         .widget.unlocked { border: 1.5px dashed #fff; box-shadow: 0 0 20px var(--gold); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-        .widget b { display: block; font-size: 0.5rem; color: var(--gold); text-transform: uppercase; margin-bottom: 2px; }
-        .widget span { font-size: 0.95rem; font-weight: 900; display: block; }
+        .widget b { display: block; font-size: 0.5rem; color: var(--gold); text-transform: uppercase; margin-bottom: 2px;
+}
+        .widget span { font-size: 0.95rem; font-weight: 900; display: block;
+}
+.widget-zone{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:35px;
+    margin-top:30px;
+    margin-bottom:30px;
+}
 
         .container { width: 94%; max-width: 500px; margin: 20px auto 180px auto; }
         .page { display: none; }
@@ -81,9 +105,30 @@
 </div>
 
 <!-- संप्रभु विजेट्स -->
-<div id="w_pay" class="widget" style="top:125px; left:10px;"><b>💰 CURR. PAY</b><span id="statPay">₹ 0</span></div>
-<div id="w_items" class="widget" style="top:125px; left:115px;"><b>📦 CURR. QTY</b><span id="statW">0.000 kg</span><span id="statP" style="font-size:0.7rem; color:var(--gold);">0 pc</span></div>
-<div id="w_ledger" class="widget" style="top:125px; left:235px; border-color:var(--green);"><b>📜 MONTH LEDGER</b><span id="ledW">0.000 kg</span><span id="ledP" style="color:var(--green);">0 pc</span></div>
+<div class="widget-zone">
+
+<div id="w_pay" class="widget">
+<b>💰 CURR. PAY</b>
+<span id="statPay">₹ 0</span>
+</div>
+
+<div id="w_items" class="widget">
+<b>📦 CURR. QTY</b>
+<span id="statW">0.000 kg</span>
+<span id="statP" style="font-size:0.7rem; color:var(--gold);">
+0 pc
+</span>
+</div>
+
+<div id="w_ledger" class="widget" style="border-color:var(--green);">
+<b>📜 MONTH LEDGER</b>
+<span id="ledW">0.000 kg</span>
+<span id="ledP" style="color:var(--green);">
+0 pc
+</span>
+</div>
+
+</div>
 
 <div class="container">
     <div id="page1" class="page active">
@@ -196,7 +241,35 @@
     function setPay(m) { payMode = m; document.getElementById('p_cash').classList.remove('active'); document.getElementById('p_debt').classList.remove('active'); document.getElementById('p_'+m.toLowerCase()).classList.add('active'); }
     function upBG(e) { const r = new FileReader(); r.onload = (ev) => { document.body.style.backgroundImage = `url(${ev.target.result})`; localStorage.setItem('S_BG', ev.target.result); }; r.readAsDataURL(e.target.files[0]); }
     function togglePanel() { let p = document.getElementById('builderPanel'); p.style.display = (p.style.display === "none") ? "flex" : "none"; }
-    function toggleLock() { isLocked = !isLocked; const btn = document.getElementById('lockBtn'); if(isLocked) { btn.innerText = "🔓 UNLOCK"; btn.style.background = "var(--red)"; document.querySelectorAll('.widget').forEach(w => w.classList.remove('unlocked')); } else { btn.innerText = "🔒 LOCK"; btn.style.background = "var(--green)"; document.querySelectorAll('.widget').forEach(w => w.classList.add('unlocked')); }}
+ 
+function toggleLock(){
+
+isLocked = !isLocked;
+
+const btn = document.getElementById('lockBtn');
+
+if(isLocked){
+
+btn.innerText = "🔓 UNLOCK";
+btn.style.background = "var(--red)";
+
+document.querySelectorAll('.widget').forEach(w=>{
+w.classList.remove('unlocked');
+});
+
+}else{
+
+btn.innerText = "🔒 LOCK";
+btn.style.background = "var(--green)";
+
+document.querySelectorAll('.widget').forEach(w=>{
+w.classList.add('unlocked');
+});
+
+}
+
+}
+    
     function startVoice() { const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); rec.lang = 'hi-IN'; rec.onresult = (e) => { let s = e.results[0][0].transcript.toLowerCase(); let n = s.match(/\d+/g); if(n) { document.getElementById('mName').value=s.split(' ')[0]; document.getElementById('mWeight').value=n[0]; if(n[1]) document.getElementById('mRate').value=n[1]; } }; rec.start(); }
 
     interact('.widget').draggable({ listeners: { move(event) { if (isLocked) return; let t = event.target; let x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx; let y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy; t.style.transform = `translate(${x}px, ${y}px)`; t.setAttribute('data-x', x); t.setAttribute('data-y', y); localStorage.setItem(t.id, JSON.stringify({x, y})); }}});
