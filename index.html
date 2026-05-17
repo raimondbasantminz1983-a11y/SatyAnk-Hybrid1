@@ -69,7 +69,55 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- कार्ड्स और इनपुट --- */
-        .glass-card { background: var(--glass); border: 1.5px solid rgba(212, 175, 55, 0.3); border-radius: 25px; padding: 15px; display: flex; flex-direction: column; align-items: center; backdrop-filter: blur(10px); margin-bottom: 15px; position: relative; }
+       
+.glass-card{
+    background: var(--glass);
+    border: 1.5px solid rgba(212, 175, 55, 0.3);
+    border-radius: 25px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    margin-bottom: 15px;
+    position: relative;
+
+    animation:
+    floatBox 3s ease-in-out infinite,
+    glowBox 2s infinite alternate;
+
+    will-change: transform;
+    transition: transform 0.2s linear;
+}
+ 
+@keyframes floatBox{
+
+0%{
+transform: translateY(0px);
+}
+
+50%{
+transform: translateY(-10px);
+}
+
+100%{
+transform: translateY(0px);
+}
+
+}
+
+@keyframes glowBox{
+
+from{
+box-shadow: 0 0 10px rgba(212,175,55,0.2);
+}
+
+to{
+box-shadow: 0 0 30px rgba(212,175,55,0.7);
+}
+
+}
+
         .btn-ok { background: var(--gold); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: 900; width: 100%; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
         .input-row { display: grid; grid-template-columns: 1.2fr 2fr 1fr; gap: 5px; width: 100%; }
