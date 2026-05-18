@@ -81,7 +81,7 @@
     backdrop-filter: blur(10px);
     margin-bottom: 15px;
     position: relative;
-
+    touch-action:none;
    animation:
 glowBox 2s infinite alternate;
 
@@ -179,7 +179,8 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
 
 <div class="container">
     <div id="page1" class="page active">
-        <div class="glass-card">
+       <div class="glass-card" 
+id="glass-card-1">
             <button class="btn-ok" onclick="manualAdd()">D3: SAVE / OK (सत्य)</button>
             <div class="input-row">
                 <input type="text" id="mName" placeholder="नाम">
@@ -193,7 +194,8 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
     </div>
 
     <div id="page2" class="page">
-        <div class="glass-card">
+        <div class="glass-card" 
+id="glass-card-2">
             <h3 style="color:var(--gold); margin:0;">👤 ग्राहक पहचान & भुगतान</h3>
             <input type="text" id="custN" placeholder="पूरा नाम (अनिवार्य)" style="margin:10px 0; width:100%;">
             <input type="text" id="custI" placeholder="ID (आधार/पासपोर्ट)" style="margin-bottom:10px; width:100%;">
@@ -206,7 +208,11 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
         </div>
     </div>
 
-    <div id="page3" class="page"><div class="glass-card"><h3 style="color:var(--gold); margin:0;">📜 बहीखाता इतिहास</h3></div><div id="historyList"></div></div>
+
+<div id="page3" class="page">
+        <div class="glass-card" 
+id="glass-card-3">
+ <h3 style="color:var(--gold); margin:0;">📜 बहीखाता इतिहास</h3></div><div id="historyList"></div></div>
 </div>
 
 <div class="admin-panel" id="builderPanel">
@@ -236,14 +242,14 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
         const pc = parseFloat(document.getElementById('mPiece').value) || 0;
         const r = parseFloat(document.getElementById('mRate').value) || 0;
         if (n && (w > 0 || pc > 0)) {
-            let exIdx = bill.findIndex(it => it.n.toLowerCase() === n.toLowerCase());
-            if(exIdx !== -1) {
-                bill[exIdx].w += w; bill[exIdx].pc += pc;
-                bill[exIdx].t = (bill[exIdx].w * r) + (bill[exIdx].pc * r);
-                let item = bill.splice(exIdx, 1)[0]; bill.unshift(item);
-            } else {
-                bill.unshift({ n, w, pc, r, t: (w*r + pc*r) });
-            }
+           bill.unshift({
+    n,
+    w,
+    pc,
+    r,
+    t: (w * r) + (pc * r),
+    time: Date.now()
+});
             document.getElementById('mName').value=""; document.getElementById('mWeight').value=""; document.getElementById('mPiece').value=""; document.getElementById('mRate').value=""; render();
         }
     }
@@ -325,11 +331,33 @@ w.classList.add('unlocked');
         let st = localStorage.getItem("SatyAnk_CustomTitle"); if(st) document.getElementById("appTitle").innerText = st;
         document.querySelectorAll('.widget').forEach(w => { let pos = JSON.parse(localStorage.getItem(w.id)); if(pos) { w.style.transform = `translate(${pos.x}px, ${pos.y}px)`; w.setAttribute('data-x', pos.x); w.setAttribute('data-y', pos.y); }}); 
         let bg = localStorage.getItem('S_BG'); if(bg) document.body.style.backgroundImage = `url(${bg})`; 
-        render(); renderHistory(); 
-    };
+        render(); renderHistory();
+document.querySelectorAll('.glass-card')
+.forEach(card => {
+
+let pos = JSON.parse(
+localStorage.getItem(card.id)
+);
+
+if(pos){
+
+card.style.transform =
+`translate(${pos.x}px, ${pos.y}px)`;
+
+card.setAttribute('data-x', pos.x);
+card.setAttribute('data-y', pos.y);
+
+}
+
+});
+
 interact('.glass-card').draggable({
+
 listeners: {
-move(event) {
+
+move(event){
+
+if(isLocked) return;
 
 let target = event.target;
 
@@ -347,9 +375,28 @@ target.style.transform =
 target.setAttribute('data-x', x);
 target.setAttribute('data-y', y);
 
+},
+
+end(event){
+
+let target = event.target;
+
+localStorage.setItem(
+target.id,
+JSON.stringify({
+x: target.getAttribute('data-x'),
+y: target.getAttribute('data-y')
+})
+);
+
 }
+
 }
+
 });
+
+};
+
 </script>
 </body>
 </html>
