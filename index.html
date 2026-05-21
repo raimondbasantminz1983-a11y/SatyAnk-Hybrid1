@@ -84,34 +84,74 @@ body{
     
         /* --- ड्रैगेबल विजेट्स --- */    
          
-.widget{    
-    position: relative;    
-    padding: 10px;    
-    background: var(--glass);    
-    border: 1px solid var(--gold);    
-    border-radius: 12px;    
-    min-width: 110px;    
-    text-align: center;    
-    backdrop-filter: blur(10px);    
-    touch-action: none;    
-    z-index: 1500;    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);    
-}    
-        .widget.unlocked { border: 1.5px dashed #fff; box-shadow: 0 0 20px var(--gold); animation: pulse 1.5s infinite; }    
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }    
-        .widget b { display: block; font-size: 0.5rem; color: var(--gold); text-transform: uppercase; margin-bottom: 2px;    
-}    
-        .widget span { font-size: 0.95rem; font-weight: 900; display: block;    
-}    
-.widget-zone{    
-    width:100%;    
-    display:flex;    
-    flex-direction:column;    
-    align-items:center;    
-    gap:35px;    
-    margin-top:30px;    
-    margin-bottom:30px;    
-}    
+   .widget{
+    position: relative;
+    padding: 8px 4px;
+
+    background: var(--glass);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+
+    width: 32%;
+    min-width: 0;
+
+    text-align: center;
+    backdrop-filter: blur(10px);
+    touch-action: none;
+    z-index: 1500;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.widget.unlocked{
+    border: 1.5px dashed #fff;
+    box-shadow: 0 0 20px var(--gold);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{
+        opacity:1;
+    }
+    50%{
+        opacity:0.8;
+    }
+}
+
+.widget b{
+    display:block;
+    font-size:0.42rem;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:2px;
+}
+
+.widget span{
+    font-size:0.72rem;
+    font-weight:900;
+    display:block;
+}
+
+.widget-zone{
+    width:100%;
+
+    display:flex;
+    flex-direction:row;
+
+    justify-content:space-between;
+    align-items:stretch;
+
+    gap:5px;
+
+    margin-top:20px;
+
+    padding:0 5px;
+
+    box-sizing:border-box;
+}
     
         .container { width: 94%; max-width: 500px; margin: 20px auto 180px auto; }    
         .page { display: none; }    
@@ -299,7 +339,11 @@ id="glass-card-3">
     <div class="panel-row">    
         <button style="background:#111; color:#fff;" onclick="document.getElementById('bgIn').click()">📸 BG</button>    
         <button id="lockBtn" style="background:var(--red); color:#fff;" onclick="toggleLock()">🔓 UNLOCK</button>    
-        <button style="background:var(--gold); color:#000;" onclick="startVoice()">🎤 SPEAK</button>    
+          <button id="micBtn"
+style="background:var(--gold); color:#000;"
+onclick="startVoice()">
+🎤 MIC OFF
+</button>
     </div>    
     <button style="background:#222; color:#eee; border:1px solid #666; width:100px; padding:8px;" onclick="togglePanel()">DONE</button>    
 </div>    
@@ -318,26 +362,67 @@ id="glass-card-3">
 </footer>    
     
 <script>    
-    let bill = []; document.getElementById('custN').value = "";
+    
+      let bill = [];
+
+let micEnabled =
+localStorage.getItem("SATYANK_MIC") === "ON";
+
+let recognition;
+ document.getElementById('custN').value = "";
 document.getElementById('custI').value = "";
 let history = JSON.parse(localStorage.getItem("SatyAnk_L_v63")) || []; let isLocked = true; let payMode = "Cash";    
     
     function changeAppTitle(newTitle) { if(!newTitle) newTitle = "SatyAnk Shop OS"; document.getElementById("appTitle").innerText = newTitle; localStorage.setItem("SatyAnk_CustomTitle", newTitle); }    
        
+ function startVoice(){
 
-function startVoice() {
+    if(micEnabled){
 
-    const rec = new (
+        micEnabled = false;
+
+        localStorage.setItem(
+            "SATYANK_MIC",
+            "OFF"
+        );
+
+        if(recognition){
+            recognition.stop();
+        }
+
+        document.getElementById("micBtn").innerText =
+        "🎤 MIC OFF";
+
+        return;
+    }
+
+    micEnabled = true;
+
+    localStorage.setItem(
+        "SATYANK_MIC",
+        "ON"
+    );
+
+    document.getElementById("micBtn").innerText =
+    "🎙️ MIC ON";
+
+    recognition = new (
         window.SpeechRecognition ||
         window.webkitSpeechRecognition
     )();
 
-    rec.lang = 'hi-IN';
+    recognition.lang = 'hi-IN';
 
-    rec.onresult = (e) => {
+    recognition.continuous = true;
+
+    recognition.interimResults = false;
+
+    recognition.onresult = (e) => {
 
         let s =
-        e.results[0][0].transcript.toLowerCase();
+        e.results[e.results.length - 1][0]
+        .transcript
+        .toLowerCase();
 
         let nums = s.match(/\d+/g);
 
@@ -345,9 +430,9 @@ function startVoice() {
 
         let rate = nums[nums.length - 1];
 
-        document.getElementById('mRate').value = rate;
+        document.getElementById('mRate').value =
+        rate;
 
-        // weight detect
         if(
             s.includes("किलो") ||
             s.includes("kg") ||
@@ -358,11 +443,11 @@ function startVoice() {
             document.getElementById('mWeight').value =
             nums[0];
 
-            document.getElementById('mPiece').value = "";
+            document.getElementById('mPiece').value =
+            "";
 
         }
 
-        // piece detect
         else if(
             s.includes("पीस") ||
             s.includes("piece") ||
@@ -372,20 +457,19 @@ function startVoice() {
             document.getElementById('mPiece').value =
             nums[0];
 
-            document.getElementById('mWeight').value = "";
+            document.getElementById('mWeight').value =
+            "";
 
         }
 
-        // साफ नाम
         let cleanName = s
-            .replace(/\d+/g,'')
-            .replace(/किलो|kg|ग्राम|gm|लीटर|liter|पीस|piece|pc/g,'')
-            .trim();
+        .replace(/\d+/g,'')
+        .replace(/किलो|kg|ग्राम|gm|लीटर|liter|पीस|piece|pc/g,'')
+        .trim();
 
         document.getElementById('mName').value =
         cleanName;
 
-        // AUTO SAVE
         if(cleanName && rate){
 
             setTimeout(()=>{
@@ -393,11 +477,18 @@ function startVoice() {
                 manualAdd();
 
             },300);
-
         }
     };
 
-    rec.start();
+    recognition.onend = () => {
+
+        if(micEnabled){
+
+            recognition.start();
+        }
+    };
+
+    recognition.start();
 }
 
 
@@ -555,6 +646,14 @@ document.getElementById('custI').value = "";
 document.getElementById('showPanelBtn').style.display = "block";
 document.getElementById('builderPanel').style.display = "none";
    
+if(micEnabled){
+
+    setTimeout(()=>{
+
+            startVoice();
+
+    },1000);
+}
      document.querySelectorAll('.widget').forEach(w => { let pos = JSON.parse(localStorage.getItem(w.id)); if(pos) { w.style.transform = `translate(${pos.x}px, ${pos.y}px)`; w.setAttribute('data-x', pos.x); w.setAttribute('data-y', pos.y); }});     
         let bg = localStorage.getItem('S_BG'); if(bg) document.body.style.backgroundImage = `url(${bg})`;     
         render(); renderHistory();    
@@ -626,6 +725,3 @@ y: target.getAttribute('data-y')
 </script>    
 </body>    
 </html>
-
-
-
