@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>    
 <html lang="hi">    
 <head>    
@@ -43,16 +44,95 @@ body{
 .glass-card{
     cursor: grab;
     user-select: none;
+    touch-action:none;
+   -webkit-user-drag:none;
 }
 
 .widget:active,
 .glass-card:active{
     cursor: grabbing;
 }
+   #contextMenuBtn{
+    position:absolute;
+
+    top:12px;
+    left:12px;
+
+    width:32px;
+    height:32px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,0.06);
+
+    border:1px solid rgba(212,175,55,0.35);
+
+    color:var(--gold);
+
+    font-size:22px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    backdrop-filter:blur(10px);
+
+    z-index:2500;
+}
+#contextMenu{
+
+    position:absolute;
+
+    top:55px;
+    left:12px;
+
+    width:190px;
+
+    background:rgba(0,0,0,0.96);
+
+    border:1px solid rgba(212,175,55,0.35);
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    display:none;
+
+    z-index:4000;
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:0 0 18px rgba(0,0,0,0.6);
+}
+
+.ctx-item{
+
+    padding:12px;
+
+    color:#eee;
+
+    font-size:0.82rem;
+
+    border-bottom:1px solid #222;
+
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+.ctx-item:hover{
+
+    background:rgba(212,175,55,0.12);
+
+    color:var(--gold);
+}
 #shareBtn{
     position: fixed;
-    bottom: 80px;
-    right: 20px;
+    bottom: 18px;
+    right: 75px;
 
     z-index: 5000;
 
@@ -60,21 +140,24 @@ body{
     color: white;
 
     border: none;
-    border-radius: 50px;
+    border-radius: 30px;
 
-    padding: 12px 18px;
+    padding: 6px 9px;
 
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.55rem;
 
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    height: 28px;
 
     display: block;
 }
 
 
         /* --- संप्रभु हेडर (Sealed) --- */    
-        header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 2000; box-shadow: 0 0 20px rgba(212,175,55,0.3); }    
+        header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 2000;
+position:relative; 
+ box-shadow: 0 0 20px rgba(212,175,55,0.3); }    
         header h1 { color: var(--gold); margin: 0; font-size: 1.4rem; letter-spacing: 5px; text-transform: uppercase; }    
         .hb-sign { font-size: 0.55rem; color: var(--green); letter-spacing: 2px; margin-top: 5px; font-family: monospace; font-weight: bold; }    
     
@@ -83,53 +166,42 @@ body{
         .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(212, 175, 55, 0.1); }    
     
         /* --- ड्रैगेबल विजेट्स --- */    
-         
+    
     .widget{
     position:relative;
+
     width:32%;
+
     min-width:0;
+
     padding:8px 4px;
+
     background:var(--glass);
+
     border:1px solid var(--gold);
+
     border-radius:12px;
+
     text-align:center;
+
     backdrop-filter:blur(10px);
+
     touch-action:none;
+
     z-index:1500;
+
     box-sizing:border-box;
+
     box-shadow:0 4px 10px rgba(0,0,0,0.5);
     flex-shrink:0;
 }
-
-.widget.unlocked{
-    border: 1.5px dashed #fff;
-    box-shadow: 0 0 20px var(--gold);
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-    0%,100%{
-        opacity:1;
-    }
-    50%{
-        opacity:0.8;
-    }
-}
-
-.widget b{
-    display:block;
-    font-size:0.42rem;
-    color:var(--gold);
-    text-transform:uppercase;
-    margin-bottom:2px;
-}
-
-.widget span{
-    font-size:0.72rem;
-    font-weight:900;
-    display:block;
-}
-
+ 
+        .widget.unlocked { border: 1.5px dashed #fff; box-shadow: 0 0 20px var(--gold); animation: pulse 1.5s infinite; }      
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }      
+        .widget b { display: block; font-size: 0.5rem; color: var(--gold); text-transform: uppercase; margin-bottom: 2px;      
+}      
+        .widget span { font-size: 0.95rem; font-weight: 900; display: block;      
+}      
 .widget-zone{
     width:100%;
     display:flex;
@@ -138,21 +210,20 @@ body{
     align-items:center;
     gap:5px;
    margin-top:15px;
-    margin-bottom:15px;
+    margin-bottom:1px;
     padding:0 5px;
     box-sizing:border-box;
     position:relative;
 }
- 
-    
-        .container { width: 94%; max-width: 500px; margin: 20px auto 180px auto; }    
+
+       .container { width: 94%; max-width: 500px; margin: 20px auto 180px auto; }    
         .page { display: none; }    
         .page.active { display: block; animation: fadeIn 0.3s ease; }    
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }    
     
         /* --- कार्ड्स और इनपुट --- */    
            
-.glass-card{    
+    .glass-card{    
     background: var(--glass);    
     border: 1.5px solid rgba(212, 175, 55, 0.3);    
     border-radius: 25px;    
@@ -199,7 +270,7 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
     
 }    
     
-        .btn-ok { background: var(--gold); color: #000; border: none; padding: 10px; border-radius: 12px; font-weight: 900; width: 40%; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }    
+        .btn-ok { background: var(--gold); color: #000; border: none; padding: 10px; border-radius: 12px; font-weight: 900; width: 40%; cursor: pointer; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); align-self: flex-start;}    
             
         .input-row { display: grid; grid-template-columns: 1.2fr 2fr 1fr; gap: 5px; width: 100%; }    
         .qty-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 10px; border: 1px solid #333; }    
@@ -223,7 +294,7 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
     
 #showPanelBtn{    
     position: fixed;    
-    bottom: 20px;    
+    bottom: 18px;    
     right: 20px;    
     
     z-index: 5000;    
@@ -232,25 +303,77 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
     color: #000;    
     
     border: none;    
-    border-radius: 50px;    
+    border-radius: 30px;    
     
-    padding: 12px 18px;    
+    padding: 6px 9px;    
     
     font-weight: bold;    
-    font-size: 0.8rem;    
+    font-size: 0.55rem;    
     
-    box-shadow: 0 0 15px rgba(212,175,55,0.5);    
-    
+    box-shadow: 0 0 8px rgba(212,175,55,0.5);    
+    height: 28px;
+
     display: block;    
 }    
     </style>    
 </head>    
 <body>    
     
-<header>    
+<header>   
+ <div id="contextMenuBtn" onclick="toggleContextMenu()">
+⋮
+</div>
     <h1 id="appTitle">SatyAnk Shop OS</h1>    
     <div class="hb-sign">HB-SIGN: LIVE-RBM-CORE | A-JUDGE: TRUE</div>    
-</header>   
+</header>  
+ <div id="contextMenu">
+
+<div class="ctx-item"
+onclick="showPage(1)">
+📄 Billing
+</div>
+
+<div class="ctx-item"
+onclick="showPage(2)">
+💳 Payment
+</div>
+
+<div class="ctx-item"
+onclick="showPage(3)">
+📜 History
+</div>
+
+<div class="ctx-item"
+onclick="manualAdd()">
+➕ Quick Add
+</div>
+
+<div class="ctx-item"
+onclick="document.getElementById('sInp').focus()">
+🔍 Search Item
+</div>
+
+<div class="ctx-item"
+onclick="startVoice()">
+🎤 Voice Add
+</div>
+
+<div class="ctx-item"
+onclick="toggleLock()">
+🔒 Lock / Unlock
+</div>
+
+<div class="ctx-item"
+onclick="document.getElementById('bgIn').click()">
+🖼 Change BG
+</div>
+
+<div class="ctx-item"
+onclick="shareApp()">
+📤 Share
+</div>
+
+</div>
     
 <div class="page-nav">    
     <button class="nav-btn active" id="nav1" onclick="showPage(1)">📄 बिलिंग</button>    
@@ -258,31 +381,100 @@ box-shadow: 0 0 30px rgba(212,175,55,0.7);
     <button class="nav-btn" id="nav3" onclick="showPage(3)">📜 इतिहास</button>    
 </div>    
     
-<!-- संप्रभु विजेट्स -->    
-<div class="widget-zone">    
-    
-<div id="w_pay" class="widget">    
-<b>💰 CURR. PAY</b>    
-<span id="statPay">₹ 0</span>    
-</div>    
-    
-<div id="w_items" class="widget">    
-<b>📦 CURR. QTY</b>    
-<span id="statW">0.000 kg</span>    
-<span id="statP" style="font-size:0.7rem; color:var(--gold);">    
-0 pc    
-</span>    
-</div>    
-    
-<div id="w_ledger" class="widget" style="border-color:var(--green);">    
-<b>📜 MONTH LEDGER</b>    
-<span id="ledW">0.000 kg</span>    
-<span id="ledP" style="color:var(--green);">    
-0 pc    
-</span>    
-</div>    
-    
-</div>    
+<!-- संप्रभु विजेट्स --> 
+   
+<div class="widget-zone">
+
+<!-- अभी का कुल रुपये -->
+<div id="w_pay" class="widget">
+<b>💰 कुल राशि (अभी)</b>
+<span id="statPay">
+₹ 0
+</span>
+
+</div>
+<!-- अभी का कुल आइटम -->
+<div id="w_items" class="widget">
+<b>📦 कुल आइटम (अभी)</b>
+<span id="currItemCount">
+0
+</span>
+<div style="
+margin-top:10px;
+border-top:1px solid rgba(212,175,55,0.4);
+padding-top:8px;
+display:flex;
+justify-content:space-around;
+font-size:0.8rem;
+color:var(--gold);
+">
+
+<div>
+<span id="statP">0</span> PC
+</div>
+
+<div style="
+width:1px;
+background:rgba(212,175,55,0.4);
+"></div>
+
+<div>
+<span id="statW">0.000</span> KG
+</div>
+
+</div>
+
+</div>
+
+<!-- आज का हिसाब -->
+<div id="w_ledger"
+class="widget"
+style="border-color:var(--green);">
+<b style="color:var(--green);">
+📅 कुल राशि (आज)
+</b>
+<span id="todayPay">
+₹ 0
+</span>
+
+<div style="
+margin-top:10px;
+border-top:1px solid rgba(57,255,20,0.4);
+padding-top:8px;
+">
+<div style="
+font-size:0.8rem;
+margin-bottom:6px;
+color:var(--green);
+">कुल आइटम (आज)
+</div>
+
+<div style="
+display:flex;
+justify-content:space-around;
+font-size:0.8rem;
+color:var(--green);
+">
+<div>
+<span id="todayPc">0</span> PC
+</div>
+
+<div style="
+width:1px;
+background:rgba(57,255,20,0.4);
+"></div>
+
+<div>
+<span id="todayKg">0.000</span> KG
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
     
 <div class="container">    
     <div id="page1" class="page active">    
@@ -298,7 +490,12 @@ placeholder="कोई भी वास्तविक सामान या �
                  <div class="qty-split"><input type="number" id="mWeight" placeholder="वजन"><input type="number" id="mPiece" placeholder="पीस"></div>    
                 <input type="number" id="mRate" placeholder="रेट">    
             </div>    
-            <input type="text" id="sInp" class="btn-ok" style="background:rgba(255,255,255,0.05); color:var(--gold); margin-top:12px; text-align:center; height:40px; padding:0;" placeholder="🔍 यहाँ से खोजें..." oninput="render()">    
+            <input type="text" id="sInp" class="btn-ok" style="background:rgba(255,255,255,0.05); color:var(--gold); margin-top:10px; margin-left:auto; margin-right:0;  text-align:center; height:34px; display:block; 
+border:1px solid #444;
+border-radius:10px;
+
+padding:0 8px;
+" placeholder="🔍 यहाँ से खोजें..." oninput="render()">    
             <div class="auto-check">AUTO-CHECK: RBM–SELF-VERIFY–∞</div>    
         </div>    
         <div id="listArea"></div>    
@@ -361,14 +558,18 @@ let micEnabled =
 localStorage.getItem("SATYANK_MIC") === "ON";
 
 let recognition;
- document.getElementById('custN').value = "";
-document.getElementById('custI').value = "";
 let history = JSON.parse(localStorage.getItem("SatyAnk_L_v63")) || []; let isLocked = true; let payMode = "Cash";    
     
     function changeAppTitle(newTitle) { if(!newTitle) newTitle = "SatyAnk Shop OS"; document.getElementById("appTitle").innerText = newTitle; localStorage.setItem("SatyAnk_CustomTitle", newTitle); }    
        
  function startVoice(){
-
+    if(
+!window.SpeechRecognition &&
+!window.webkitSpeechRecognition
+){
+    alert("Voice not supported");
+    return;
+}
     if(micEnabled){
 
         micEnabled = false;
@@ -516,7 +717,9 @@ function shareApp(){
     w,    
     pc,    
     r,    
-    t: (w * r) + (pc * r),    
+   t:
+(w > 0 ? w * r : 0) +
+(pc > 0 ? pc * r : 0),    
     time: Date.now()    
 });    
             document.getElementById('mName').value=""; document.getElementById('mWeight').value=""; document.getElementById('mPiece').value=""; document.getElementById('mRate').value=""; render();    
@@ -531,8 +734,13 @@ function shareApp(){
             list.innerHTML += `<div class="item-card"><div><b>${it.n}</b><br><small>${it.w > 0 ? it.w.toFixed(3)+'kg ' : ''}${it.pc > 0 ? it.pc+'pc' : ''} @₹${it.r}</small></div><div style="display:flex; align-items:center; gap:10px;"><b>₹${it.t.toFixed(0)}</b><span onclick="deleteItem(${index})" style="color:#444;cursor:pointer;">✕</span></div></div>`;    
         });    
         document.getElementById("statPay").innerText = "₹ " + tC.toFixed(0);    
-        document.getElementById("statW").innerText = tW.toFixed(3) + " kg";    
-        document.getElementById("statP").innerText = tP + " pc";    
+document.getElementById("statW").innerText =
+tW.toFixed(3);
+document.getElementById("statP").innerText =
+tP;
+document.getElementById("currItemCount")
+.innerText =
+bill.length; 
         updateLedgerStats();    
     }    
    
@@ -566,12 +774,36 @@ function shareApp(){
     showPage(1);    
 }
 
-    function updateLedgerStats() {    
-        let tw = 0, tp = 0; const currentMonth = new Date().getMonth();    
-        history.forEach(h => { if(h.month === currentMonth) { h.i.forEach(item => { tw += (item.w || 0); tp += (item.pc || 0); }); } });    
-        document.getElementById("ledW").innerText = tw.toFixed(3) + " kg";    
-        document.getElementById("ledP").innerText = tp + " pc";    
-    }    
+   function updateLedgerStats(){
+    let todayPay = 0;
+    let todayPc = 0;
+    let todayKg = 0;
+    let today =
+    new Date().toDateString();
+    history.forEach(h=>{
+        let hDate =
+        new Date(h.id).toDateString();
+        if(hDate === today){
+            todayPay += h.t;
+            h.i.forEach(item=>{
+                todayPc +=
+                (item.pc || 0);
+                todayKg +=
+                (item.w || 0);
+            });
+        }
+    });
+  
+  document.getElementById("todayPay")
+    .innerText =
+    "₹ " + todayPay.toFixed(0);
+    document.getElementById("todayPc")
+    .innerText =
+    todayPc;
+    document.getElementById("todayKg")
+    .innerText =
+    todayKg.toFixed(3);
+}
     
     function renderHistory() {    
         const list = document.getElementById("historyList"); list.innerHTML = "";    
@@ -583,11 +815,14 @@ function shareApp(){
     function showPage(n) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('page'+n).classList.add('active'); document.getElementById('nav'+n).classList.add('active'); }    
     function setPay(m) { payMode = m; document.getElementById('p_cash').classList.remove('active'); document.getElementById('p_debt').classList.remove('active'); document.getElementById('p_'+m.toLowerCase()).classList.add('active'); }    
     function upBG(e) { const r = new FileReader(); r.onload = (ev) => { document.body.style.backgroundImage = `url(${ev.target.result})`; localStorage.setItem('S_BG', ev.target.result); }; r.readAsDataURL(e.target.files[0]); }    
-    function togglePanel(){    
     
-    let panel = document.getElementById('builderPanel');    
-    let btn = document.getElementById('showPanelBtn');    
-    
+   function togglePanel(){
+
+    let panel =
+    document.getElementById('builderPanel');
+
+    let btn =
+    document.getElementById('showPanelBtn');
     if(panel.style.display === "none"){    
     
         panel.style.display = "flex";    
@@ -600,7 +835,20 @@ function shareApp(){
     
     }    
     
-}    
+}   
+      
+        function toggleContextMenu(){
+       let menu =
+    document.getElementById("contextMenu");
+    if(menu.style.display === "block"){
+    menu.style.display = "none";
+
+    }else{
+
+        menu.style.display = "block";
+    }
+}
+
  function toggleLock(){    
     
 isLocked = !isLocked;    
@@ -630,7 +878,12 @@ w.classList.add('unlocked');
 }    
         
    
-    interact('.widget').draggable({ listeners: { move(event) { if (isLocked) return; let t = event.target; let x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx; let y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy; t.style.transform = `translate(${x}px, ${y}px)`; t.setAttribute('data-x', x); t.setAttribute('data-y', y); localStorage.setItem(t.id, JSON.stringify({x, y})); }}});    
+    interact('.widget').draggable({ modifiers: [
+interact.modifiers.restrictRect({
+restriction: 'parent',
+endOnly: true
+})
+], listeners: { move(event) { if (isLocked) return; let t = event.target; let x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx; let y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy; t.style.transform = `translate(${x}px, ${y}px)`; t.setAttribute('data-x', x); t.setAttribute('data-y', y); localStorage.setItem(t.id, JSON.stringify({x, y})); }}});    
     
     window.onload = () => { document.getElementById('custN').value = "";
 document.getElementById('custI').value = "";
@@ -668,7 +921,12 @@ card.setAttribute('data-y', pos.y);
     
 });    
     
-interact('.glass-card').draggable({    
+interact('.glass-card').draggable({ modifiers: [
+interact.modifiers.restrictRect({
+restriction: 'parent',
+endOnly: true
+})
+],   
     
 listeners: {    
     
@@ -712,9 +970,8 @@ y: target.getAttribute('data-y')
     
 });    
     
-}; 
-
-
+};    
+    
 </script>    
 </body>    
 </html>
