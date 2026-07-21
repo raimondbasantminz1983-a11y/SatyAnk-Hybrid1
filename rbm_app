@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBM CYBER ROBOTIC APP</title>
+    <style>
+        body { background: #000; color: #fff; font-family: monospace; padding: 20px; text-align: center; }
+        .box { border: 2px solid #00ff00; padding: 15px; margin: 10px auto; max-width: 450px; text-align: left; background: #111; }
+        .btn-panel { display: flex; justify-content: space-around; margin: 20px 0; }
+        button { background: #222; color: #00ff00; border: 1px solid #00ff00; padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        button:hover { background: #00ff00; color: #000; }
+        pre { color: #00ff00; background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+    <!-- Brython Engine for running Python directly in Mobile Browser -->
+    <script type="text/javascript" src="https://jsdelivr.net"></script>
+</head>
+<body onload="brython()">
+
+    <div class="box">
+        <h3>📱 RBM CYBER SECURITY & ROBOTIC APP</h3>
+        <p><strong>[LIVE MODE]</strong> ──▶ <span id="mode-text" style="color: #00ff00;">🟢 NORMAL</span></p>
+        <p><strong>[LAST BUTTON]</strong> ─▶ <span id="btn-text">🔘 NONE</span></p>
+        <p><strong>[DECODING]</strong> ───▶ <span id="action-text">⚙️ READY</span></p>
+    </div>
+
+    <div class="box">
+        <h4>🎛️ वर्चुअल टच बटन कंट्रोल पैनल</h4>
+        <div class="btn-panel">
+            <button id="btn1">बटन 1</button>
+            <button id="btn0">बटन 0</button>
+            <button id="btn10">बटन 10</button>
+        </div>
+    </div>
+
+    <div class="box">
+        <h4>📊 DIGITAL OSCILLOSCOPE: LIVE SIGNALS</h4>
+        <pre id="scope-screen">
+[P_PIN 5] ──▶ _______________________
+[P_PIN 3] ──▶ _______________________
+[P_PIN 2] ──▶ _______________________
+[P_PIN 8] ──▶ _______________________
+[P_PIN 6] ──▶ _______________________
+        </pre>
+    </div>
+
+    <!-- 🐍 PYTHON LOGIC RUNNING DIRECTLY IN HTML -->
+    <script type="text/python">
+        from browser import document, html
+
+        pins = [5, 3, 2, 8, 6]
+        normal_lang = {0x01: "OBSERVE", 0x04: "STOP/EXECUTE"}
+        critical_lang = {0x01: "LOCK", 0x04: "SHUTDOWN"}
+
+        def render_waveform(opcode):
+            bits_value = opcode & 0x1F
+            binary_string = format(bits_value, '05b')
+            screen_text = ""
+            for index, pin in enumerate(pins):
+                bit = binary_string[index]
+                if bit == '1':
+                    screen_text += f"[P_PIN {pin}] ⚡ HIGH ─▶ ┌───┐   ┌───┐   ┌───┐\n"
+                else:
+                    screen_text += f"[P_PIN {pin}] 💤 LOW  ─▶ _______________________\n"
+            document["scope-screen"].text = screen_text
+
+        def click_btn1(ev):
+            document["mode-text"].text = "🟢 NORMAL"
+            document["btn-text"].text = "🔘 BUTTON 1"
+            document["action-text"].text = "⚙️ " + normal_lang[0x01]
+            render_waveform(0x01)
+
+        def click_btn0(ev):
+            document["mode-text"].text = "🟢 NORMAL"
+            document["btn-text"].text = "🔘 BUTTON 0"
+            document["action-text"].text = "⚙️ " + normal_lang[0x04]
+            render_waveform(0x00)
+
+        def click_btn10(ev):
+            document["mode-text"].text = "🔴 CRITICAL"
+            document["btn-text"].text = "🔘 BUTTON 10 (BOTH)"
+            document["action-text"].text = "⚙️ " + critical_lang[0x01]
+            render_waveform(0x15) # ಮ್ಯೂಟೇಟೆಡ್ ಬಾಹ್ಯ ತರಂಗ (10101)
+
+        document["btn1"].bind("click", click_btn1)
+        document["btn0"].bind("click", click_btn0)
+        document["btn10"].bind("click", click_btn10)
+    </script>
+</body>
+</html>
